@@ -1,8 +1,8 @@
 {
   "name": "lenny-bot",
   "version": "1.0.0",
-  "description": "Lenny's bot",
-  "main": "app.js",
+  "description": "Lenny bot",
+  "main": "bot.js",
   "author": "QuantumSheep",
   "dependencies": {
     "discord.js": "^11.3.2"
