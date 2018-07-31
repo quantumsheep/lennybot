@@ -52,15 +52,16 @@ client.on('ready', () => {
 
     client.on('message', msg => {
         if (msg.author.bot) return;
-    
+
         if (msg.content.indexOf(config.prefix) === 0 || msg.content.indexOf(`<@${client.user.id}>`) === 0) {
             const args = msg.content.trim().split(/ +/g);
             args.shift()
-            const lenny = args.shift().toLowerCase();
-            
-            const message = args.join(' ');
 
-            if (lenny) {
+            if (args.length >= 1) {
+                const lenny = args.shift().toLowerCase();
+
+                const message = args.join(' ');
+
                 if (lenny === 'help') {
                     msg.channel.send(helpEmbed);
                 } else if (lenny in lennys) {
@@ -71,7 +72,7 @@ client.on('ready', () => {
             } else {
                 msg.channel.send('( ͡° ͜ʖ ͡°)');
             }
-    
+
             tryDelete(msg);
         }
     });
