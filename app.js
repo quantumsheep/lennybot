@@ -61,7 +61,7 @@ client.on('ready', () => {
                 if (args[0] === 'help') {
                     msg.channel.send(helpEmbed);
                 } else if (args[0] in lennys) {
-                    msg.channel.send(lennys[args[0]]);
+                    msg.channel.send(lennys[args[0]] + (args[1] ? ' ' + args[1] : ''));
                 } else {
                     msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°)')
                 }
