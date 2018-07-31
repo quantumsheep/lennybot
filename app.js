@@ -55,13 +55,16 @@ client.on('ready', () => {
     
         if (msg.content.indexOf(config.prefix) === 0 || msg.content.indexOf(`<@${client.user.id}>`) === 0) {
             const args = msg.content.trim().split(/ +/g);
-            const command = args.shift().toLowerCase();
-    
-            if (args[0]) {
-                if (args[0] === 'help') {
+            args.shift()
+            const lenny = args.shift().toLowerCase();
+            
+            const message = args.join(' ');
+
+            if (lenny) {
+                if (lenny === 'help') {
                     msg.channel.send(helpEmbed);
-                } else if (args[0] in lennys) {
-                    msg.channel.send(lennys[args[0]] + (args[1] ? ' ' + args[1] : ''));
+                } else if (lenny in lennys) {
+                    msg.channel.send(lennys[lenny] + (message ? ' ' + message : ''));
                 } else {
                     msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°)')
                 }
