@@ -1,0 +1,10 @@
+{
+  "name": "lenny-bot",
+  "version": "1.0.0",
+  "description": "Lenny's bot",
+  "main": "app.js",
+  "author": "QuantumSheep",
+  "dependencies": {
+    "discord.js": "^11.3.2"
+  }
+}
