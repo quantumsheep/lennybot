@@ -3,17 +3,6 @@ const config = require("./config.json");
 
 const client = new Discord.Client();
 
-/**
- * Try to delete a message
- * 
- * @param {Discord.Message} msg 
- */
-const tryDelete = msg => {
-    if (msg.deletable) {
-        msg.delete();
-    }
-}
-
 const lennys = {
     'default': '( ͡° ͜ʖ ͡°)',
     'tripping': '( ͡◉ ͜ʖ ͡◉)',
@@ -46,6 +35,16 @@ const lennys = {
 client.on('ready', () => {
     console.log('I am ready!');
 
+    const updateStats = () => {
+        const servers = client.guilds.array();
+        const members = servers.map(x => x.memberCount).reduce((a, b) => a + b, 0);
+
+        client.user.setActivity(`Lenny in ${servers.length} servers with a total of ${members} members.`);
+    }
+
+    updateStats();
+    setInterval(updateStats, 3600000);
+
     const helpEmbed = new Discord.RichEmbed({
         color: '000000',
         title: "Lenny's help",
@@ -58,6 +57,10 @@ client.on('ready', () => {
             {
                 name: 'random',
                 value: `Send a random lenny`
+            },
+            {
+                name: 'Invitation link',
+                value: `<https://bit.ly/2Mh3lXG>`
             },
             {
                 name: 'Types of lenny',
@@ -88,29 +91,30 @@ client.on('ready', () => {
         if (msg.author.bot) return;
 
         if (msg.content.indexOf(config.prefix) === 0 || msg.content.indexOf(`<@${client.user.id}>`) === 0) {
-            const args = msg.content.trim().split(/ +/g);
-            args.shift()
+            const [, ...args] = msg.content.trim().split(/ +/g);
 
-            tryDelete(msg);
+            if (msg.deletable) {
+                msg.delete();
+            }
 
-            if (args.length >= 1) {
-                const lenny = args.shift().toLowerCase();
+            if (args.length <= 0) {
+                return msg.channel.send(lennys.default);
+            }
 
-                const message = args.join(' ');
+            const lenny = args.shift().toLowerCase();
 
-                if (lenny === 'help') {
-                    msg.channel.send(helpEmbed);
-                } else if (lenny === 'random') {
-                    const randomLenny = lennysKeys[Math.floor(Math.random() * lennysKeys.length)];
+            const message = args.join(' ');
 
-                    sendLenny(msg, randomLenny, message);
-                } else if (lenny in lennys) {
-                    sendLenny(msg, lenny, message);
-                } else {
-                    msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°)')
-                }
+            if (lenny === 'help') {
+                msg.channel.send(helpEmbed);
+            } else if (lenny === 'random') {
+                const randomLenny = lennysKeys[Math.floor(Math.random() * lennysKeys.length)];
+
+                sendLenny(msg, randomLenny, message);
+            } else if (lenny in lennys) {
+                sendLenny(msg, lenny, message);
             } else {
-                msg.channel.send(lennys.default);
+                msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°)')
             }
         }
     });
