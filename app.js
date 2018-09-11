@@ -38,6 +38,9 @@ const lennys = {
     'fisticuffs': '(ง ͠° ͟ل͜ ͡°)ง',
     'thumbsup': '( ͡⚆ ͜ʖ ͡⚆)∩╮',
     'bird': '( ͡° ͜ʖ ͡°)╭∩╮',
+    'dna': {
+        path: './adnlenny.gif'
+    },
 }
 
 client.on('ready', () => {
@@ -65,6 +68,22 @@ client.on('ready', () => {
 
     const lennysKeys = Object.keys(lennys);
 
+    const sendLenny = (msg, lenny, message = '') => {
+        if (message) {
+            message = ' ' + message;
+        } else {
+            message = '';
+        }
+
+        if (typeof lennys[lenny] === 'string') {
+            message = lennys[lenny] + message;
+
+            msg.channel.send(message);
+        } else {
+            msg.channel.send(message, new Discord.Attachment(lennys[lenny].path));
+        }
+    };
+
     client.on('message', msg => {
         if (msg.author.bot) return;
 
@@ -84,11 +103,9 @@ client.on('ready', () => {
                 } else if (lenny === 'random') {
                     const randomLenny = lennysKeys[Math.floor(Math.random() * lennysKeys.length)];
 
-                    msg.channel.send(lennys[randomLenny] + (message ? ' ' + message : ''));
-                } else if (lenny === 'dna') {
-                    msg.channel.send(new Discord.Attachment('./adnlenny.gif'));
+                    sendLenny(msg, randomLenny, message);
                 } else if (lenny in lennys) {
-                    msg.channel.send(lennys[lenny] + (message ? ' ' + message : ''));
+                    sendLenny(msg, lenny, message);
                 } else {
                     msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°)')
                 }
