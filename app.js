@@ -33,19 +33,24 @@ const lennys = {
 }
 
 client.on('ready', () => {
-    console.log('I am ready!');
+    console.log(`I am ready!  ̿̿ ̿̿ ̿̿ ̿'̿'̵͇̿з= ( ▀ ͜͞ʖ▀) =ε/̵͇̿/’̿’̿ ̿ ̿̿ ̿̿ ̿̿`);
 
     const updateStats = () => {
         const servers = client.guilds.array();
         const members = servers.map(x => x.memberCount).reduce((a, b) => a + b, 0);
 
-        client.user.setActivity(`Lenny in ${servers.length} servers with a total of ${members} members.`);
-    }
+        client.user.setActivity(`Lenny in ${servers.length} servers with a total of ${members} members.`, {
+            type: 'PLAYING'
+        });
+    };
 
     updateStats();
     setInterval(updateStats, 3600000);
 
     const helpEmbed = new Discord.RichEmbed({
+        thumbnail: {
+            url: client.user.avatarURL
+        },
         color: '000000',
         title: "Lenny's help",
         description: `Type \`/lenny\` or mention me (<@${client.user.id}>) to access all lenny's commands.`,
@@ -60,7 +65,7 @@ client.on('ready', () => {
             },
             {
                 name: 'Invitation link',
-                value: `<https://bit.ly/2Mh3lXG>`
+                value: `<https://bit.ly/2x47KIB>`
             },
             {
                 name: 'Types of lenny',
