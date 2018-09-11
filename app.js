@@ -103,6 +103,8 @@ client.on('ready', () => {
                     const randomLenny = lennysKeys[Math.floor(Math.random() * lennysKeys.length)];
 
                     msg.channel.send(lennys[randomLenny] + (message ? ' ' + message : ''));
+                } else if (lenny === 'adn') {
+                    msg.channel.send(new Discord.Attachment('./adnlenny.gif'));
                 } else if (lenny in lennys) {
                     msg.channel.send(lennys[lenny] + (message ? ' ' + message : ''));
                 } else {
