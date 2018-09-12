@@ -1,7 +1,13 @@
 const Discord = require("discord.js");
 const config = require("./config.json");
+const DBL = require("dblapi.js");
 
 const client = new Discord.Client();
+const dbl = new DBL(config.discordbotstoken, client);
+
+dbl.on('error', e => {
+    console.log(`Oops! ${e}`);
+});
 
 const lennys = {
     'default': '( ͡° ͜ʖ ͡°)',
@@ -39,7 +45,7 @@ client.on('ready', () => {
         const servers = client.guilds.array();
         const members = servers.map(x => x.memberCount).reduce((a, b) => a + b, 0);
 
-        client.user.setActivity(`Lenny in ${servers.length} servers with a total of ${members} members.`, {
+        client.user.setActivity(`Lenny in ${servers.length} servers with a total of ${members} members. /lenny help`, {
             type: 'PLAYING'
         });
     };
@@ -68,6 +74,10 @@ client.on('ready', () => {
                 value: `<https://bit.ly/2x47KIB>`
             },
             {
+                name: 'Help Lenny to spread all over the world',
+                value: `<https://discordbots.org/bot/473762588497281024/vote>`
+            },
+            {
                 name: 'Types of lenny',
                 value: Object.keys(lennys).join(', ')
             }
@@ -76,6 +86,12 @@ client.on('ready', () => {
 
     const lennysKeys = Object.keys(lennys);
 
+    /**
+     * 
+     * @param {Discord.Message} msg 
+     * @param {string} lenny 
+     * @param {string} message 
+     */
     const sendLenny = (msg, lenny, message = '') => {
         if (message) {
             message = ' ' + message;
