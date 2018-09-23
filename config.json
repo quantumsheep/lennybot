@@ -1,4 +1,5 @@
 {
     "token": "TOKEN",
+    "discordbotstoken": "DISCORDBOTS TOKEN",
     "prefix": "/lenny"
 }

@@ -92,51 +92,59 @@ client.on('ready', () => {
      * @param {string} lenny 
      * @param {string} message 
      */
-    const sendLenny = (msg, lenny, message = '') => {
-        if (message) {
-            message = ' ' + message;
-        } else {
-            message = '';
-        }
+    const sendLenny = async (msg, lenny, message = '') => {
+        try {
+            if (message) {
+                message = ' ' + message;
+            } else {
+                message = '';
+            }
 
-        if (typeof lennys[lenny] === 'string') {
-            message = lennys[lenny] + message;
+            if (typeof lennys[lenny] === 'string') {
+                message = lennys[lenny] + message;
 
-            msg.channel.send(message);
-        } else {
-            msg.channel.send(message, new Discord.Attachment(lennys[lenny].path));
+                msg.channel.send(message);
+            } else {
+                msg.channel.send(message, new Discord.Attachment(lennys[lenny].path));
+            }
+        } catch (e) {
+            console.log(e);
         }
     };
 
-    client.on('message', msg => {
-        if (msg.author.bot) return;
+    client.on('message', async msg => {
+        try {
+            if (msg.author.bot) return;
 
-        if (msg.content.indexOf(config.prefix) === 0 || msg.content.indexOf(`<@${client.user.id}>`) === 0) {
-            const [, ...args] = msg.content.trim().split(/ +/g);
+            if (msg.content.indexOf(config.prefix) === 0 || msg.content.indexOf(`<@${client.user.id}>`) === 0) {
+                const [, ...args] = msg.content.trim().split(/ +/g);
 
-            if (msg.deletable) {
-                msg.delete();
+                if (msg.deletable) {
+                    msg.delete();
+                }
+
+                if (args.length <= 0) {
+                    return msg.channel.send(lennys.default);
+                }
+
+                const lenny = args.shift().toLowerCase();
+
+                const message = args.join(' ');
+
+                if (lenny === 'help') {
+                    msg.channel.send(helpEmbed);
+                } else if (lenny === 'random') {
+                    const randomLenny = lennysKeys[Math.floor(Math.random() * lennysKeys.length)];
+
+                    sendLenny(msg, randomLenny, message);
+                } else if (lenny in lennys) {
+                    sendLenny(msg, lenny, message);
+                } else {
+                    msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°)')
+                }
             }
-
-            if (args.length <= 0) {
-                return msg.channel.send(lennys.default);
-            }
-
-            const lenny = args.shift().toLowerCase();
-
-            const message = args.join(' ');
-
-            if (lenny === 'help') {
-                msg.channel.send(helpEmbed);
-            } else if (lenny === 'random') {
-                const randomLenny = lennysKeys[Math.floor(Math.random() * lennysKeys.length)];
-
-                sendLenny(msg, randomLenny, message);
-            } else if (lenny in lennys) {
-                sendLenny(msg, lenny, message);
-            } else {
-                msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°)')
-            }
+        } catch (e) {
+            console.log(e);
         }
     });
 });
