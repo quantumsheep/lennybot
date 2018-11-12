@@ -120,11 +120,11 @@ client.on('ready', () => {
                 const [, ...args] = msg.content.trim().split(/ +/g);
 
                 if (msg.deletable) {
-                    msg.delete();
+                    await msg.delete();
                 }
 
                 if (args.length <= 0) {
-                    return msg.channel.send(lennys.default);
+                    return await msg.channel.send(lennys.default);
                 }
 
                 const lenny = args.shift().toLowerCase();
@@ -132,15 +132,15 @@ client.on('ready', () => {
                 const message = args.join(' ');
 
                 if (lenny === 'help') {
-                    msg.channel.send(helpEmbed);
+                    return msg.channel.send(helpEmbed);
                 } else if (lenny === 'random') {
                     const randomLenny = lennysKeys[Math.floor(Math.random() * lennysKeys.length)];
 
-                    sendLenny(msg, randomLenny, message);
+                    return await sendLenny(msg, randomLenny, message);
                 } else if (lenny in lennys) {
-                    sendLenny(msg, lenny, message);
+                    return await sendLenny(msg, lenny, message);
                 } else {
-                    msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°)')
+                    return await msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°)')
                 }
             }
         } catch (e) {
@@ -150,7 +150,9 @@ client.on('ready', () => {
 });
 
 client.on('error', err => {
-    console.log(err);
+    if (err !== 'ECONNRESET') {
+        console.log(err);
+    }
 });
 
 client.login(config.token);
