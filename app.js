@@ -1,13 +1,18 @@
-const Discord = require("discord.js");
-const config = require("./config.json");
-const DBL = require("dblapi.js");
+const Discord = require("discord.js")
+const config = require("./config.json")
+const DBL = require("dblapi.js")
 
-const client = new Discord.Client();
-const dbl = new DBL(config.discordbotstoken, client);
+const client = new Discord.Client()
+client.on('error', err => {
+    if (err !== 'ECONNRESET') {
+        console.log(err)
+    }
+})
 
+const dbl = new DBL(config.discordbotstoken, client)
 dbl.on('error', e => {
-    console.log(`Oops! ${e}`);
-});
+    console.log(`Oops! ${e}`)
+})
 
 const lennys = {
     'default': '( ͡° ͜ʖ ͡°)',
@@ -39,19 +44,19 @@ const lennys = {
 }
 
 client.on('ready', () => {
-    console.log(`I am ready!  ̿̿ ̿̿ ̿̿ ̿'̿'̵͇̿з= ( ▀ ͜͞ʖ▀) =ε/̵͇̿/’̿’̿ ̿ ̿̿ ̿̿ ̿̿`);
+    console.log(`I am ready!  ̿̿ ̿̿ ̿̿ ̿'̿'̵͇̿з= ( ▀ ͜͞ʖ▀) =ε/̵͇̿/’̿’̿ ̿ ̿̿ ̿̿ ̿̿`)
 
-    const updateStats = () => {
-        const servers = client.guilds.array();
-        const members = servers.map(x => x.memberCount).reduce((a, b) => a + b, 0);
+    function updateStats() {
+        const servers = client.guilds.array()
+        const members = servers.map(x => x.memberCount).reduce((a, b) => a + b, 0)
 
         client.user.setActivity(`Lenny in ${servers.length} servers with a total of ${members} members. /lenny help`, {
             type: 'PLAYING'
-        });
-    };
+        })
+    }
 
-    updateStats();
-    setInterval(updateStats, 3600000);
+    updateStats()
+    setInterval(updateStats, 3600000)
 
     const helpEmbed = new Discord.RichEmbed({
         thumbnail: {
@@ -82,9 +87,9 @@ client.on('ready', () => {
                 value: Object.keys(lennys).join(', ')
             }
         ]
-    });
+    })
 
-    const lennysKeys = Object.keys(lennys);
+    const lennysKeys = Object.keys(lennys)
 
     /**
      * 
@@ -92,67 +97,61 @@ client.on('ready', () => {
      * @param {string} lenny 
      * @param {string} message 
      */
-    const sendLenny = async (msg, lenny, message = '') => {
-        try {
-            if (message) {
-                message = ' ' + message;
-            } else {
-                message = '';
-            }
-
-            if (typeof lennys[lenny] === 'string') {
-                message = lennys[lenny] + message;
-
-                msg.channel.send(message);
-            } else {
-                msg.channel.send(message, new Discord.Attachment(lennys[lenny].path));
-            }
-        } catch (e) {
-            console.log(e);
+    async function sendLenny(msg, lenny, message = '') {
+        if (message) {
+            message = ' ' + message
+        } else {
+            message = ''
         }
-    };
 
-    client.on('message', async msg => {
-        try {
-            if (msg.author.bot) return;
+        if (typeof lennys[lenny] === 'string') {
+            message = lennys[lenny] + message
 
-            if (msg.content.indexOf(config.prefix) === 0 || msg.content.indexOf(`<@${client.user.id}>`) === 0) {
-                const [, ...args] = msg.content.trim().split(/ +/g);
-
-                if (msg.deletable) {
-                    await msg.delete();
-                }
-
-                if (args.length <= 0) {
-                    return await msg.channel.send(lennys.default);
-                }
-
-                const lenny = args.shift().toLowerCase();
-
-                const message = args.join(' ');
-
-                if (lenny === 'help') {
-                    return msg.channel.send(helpEmbed);
-                } else if (lenny === 'random') {
-                    const randomLenny = lennysKeys[Math.floor(Math.random() * lennysKeys.length)];
-
-                    return await sendLenny(msg, randomLenny, message);
-                } else if (lenny in lennys) {
-                    return await sendLenny(msg, lenny, message);
-                } else {
-                    return await msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°)')
-                }
-            }
-        } catch (e) {
-            console.log(e);
+            msg.channel.send(message)
+        } else {
+            msg.channel.send(message, new Discord.Attachment(lennys[lenny].path))
         }
-    });
-});
-
-client.on('error', err => {
-    if (err !== 'ECONNRESET') {
-        console.log(err);
     }
-});
 
-client.login(config.token);
+    client.on('message', msg => {
+        if (msg.author.bot) return
+
+        if (msg.content.indexOf(config.prefix) === 0 || msg.content.indexOf(`<@${client.user.id}>`) === 0) {
+            const [, ...args] = msg.content.trim().split(/ +/g)
+
+            if (msg.deletable) {
+                msg.delete()
+            }
+
+            if (args.length <= 0) {
+                return msg.channel.send(lennys.default)
+            }
+
+            const lenny = args.shift().toLowerCase()
+
+            const message = args.join(' ')
+
+            if (lenny === 'help') {
+                msg.channel.send(helpEmbed)
+            } else if (lenny === 'random') {
+                const randomLenny = lennysKeys[Math.floor(Math.random() * lennysKeys.length)]
+
+                sendLenny(msg, randomLenny, message)
+            } else if (lenny in lennys) {
+                sendLenny(msg, lenny, message)
+            } else {
+                const unknown = msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°) - This message will disappear in 10 seconds')
+
+                unknown.then(message => {
+                    setTimeout(() => {
+                        if (message.deletable) {
+                            message.delete()
+                        }
+                    }, 10000)
+                })
+            }
+        }
+    })
+})
+
+client.login(config.token)
