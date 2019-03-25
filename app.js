@@ -79,6 +79,10 @@ client.on('ready', () => {
                 value: `<https://bit.ly/2x47KIB>`
             },
             {
+                name: 'Source code',
+                value: `<https://github.com/QuantumSheep/lennybot>`
+            },
+            {
                 name: 'Help Lenny to spread all over the world',
                 value: `<https://discordbots.org/bot/473762588497281024/vote>`
             },
