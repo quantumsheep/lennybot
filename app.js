@@ -1,179 +1,128 @@
-const Discord = require("discord.js")
-const config = require("./config.json")
-const DBL = require("dblapi.js")
+const Discord = require('discord.js')
+const DBL = require('dblapi.js')
+
+const config = require('./config.json')
+const lennys = require('./lennys')
+const lennys_keys = Object.keys(lennys)
 
 const client = new Discord.Client()
 client.on('error', err => {
-    if (err !== 'ECONNRESET') {
-        console.log(err)
-    }
+  if (err !== 'ECONNRESET') {
+    console.log(err)
+  }
 })
 
 const dbl = new DBL(config.discordbotstoken, client)
 dbl.on('error', e => {
-    console.log(`Oops! ${e}`)
+  console.log(`Oops! ${e}`)
 })
 
-const lennys = {
-    'default': '( ͡° ͜ʖ ͡°)',
-    'tripping': '( ͡◉ ͜ʖ ͡◉)',
-    'sensual': '(͠≖ ͜ʖ͠≖)',
-    'communist': '(☭ ͜ʖ ☭)',
-    'nothappy': '( ͡° ʖ̯ ͡°)',
-    'magic': '(∩ ͡° ͜ʖ ͡°)⊃━☆ﾟ. * ･ ｡ﾟ',
-    'wick': ` ̿̿ ̿̿ ̿̿ ̿'̿'̵͇̿з= ( ▀ ͜͞ʖ▀) =ε/̵͇̿/’̿’̿ ̿ ̿̿ ̿̿ ̿̿`,
-    'straya': '( ͜。 ͡ʖ ͜。)',
-    'peek': '( ͡° ͜ʖ├┬┴┬',
-    'blush': '( ͡°⁄ ⁄ ͜⁄ ⁄ʖ⁄ ⁄ ͡°)',
-    'tableflip': '（╯ ͡ ͠° ͟ل͜ ͡°）╯︵ ┻━┻',
-    'unflip': '┬──┬ ノ( ͡° ل͜ ͡°ノ)',
-    'bill': '－－＝Ξ[̲̅$̲̅(̲̅ ͡° ͜ʖ ͡°̲̅)̲̅$̲̅]',
-    'love': '✧･ﾟ: *✧･ﾟ♡*( ͡˘̴ ͜ ʖ̫ ͡˘̴ )*♡･ﾟ✧*:･ﾟ✧',
-    'loveya': '( ♥ ͜ʖ ♥)',
-    'flex': 'ᕦ( ͡° ͜ʖ ͡°)ᕤ',
-    'reversed': '(͡ ° ͜ʖ ͡ °)',
-    'shrug': '¯\\\\\_( ͡° ͜ʖ ͡°)\\_/¯',
-    'sword': '<:::::[]=¤( ͠° ͟ʖ ͡°)',
-    'sword2': '<:::::[]=¤( ͡° ͜ʖ ͡°)',
-    'fisticuffs': '(ง ͠° ͟ل͜ ͡°)ง',
-    'thumbsup': '( ͡⚆ ͜ʖ ͡⚆)∩╮',
-    'bird': '( ͡° ͜ʖ ͡°)╭∩╮',
-    'dna': {
-        path: './adnlenny.gif'
-    },
-    'snake': '╚═( ͡° ͜ʖ ͡°)═╝\r\n' +
-        '╚═(███)═╝\r\n' +
-        '╚═(███)═╝\r\n' +
-        '.╚═(███)═╝\r\n' +
-        '..╚═(███)═╝\r\n' +
-        '…╚═(███)═╝\r\n' +
-        '…╚═(███)═╝\r\n' +
-        '..╚═(███)═╝\r\n' +
-        '.╚═(███)═╝\r\n' +
-        '╚═(███)═╝\r\n' +
-        '.╚═(███)═╝\r\n' +
-        '..╚═(███)═╝\r\n' +
-        '…╚═(███)═╝\r\n' +
-        '…╚═(███)═╝\r\n' +
-        '…..╚(███)╝\r\n' +
-        '……╚(██)╝\r\n' +
-        '………(█)\r\n' +
-        '……….*\r\n',
+/**
+ * 
+ * @param {Discord.Message} message 
+ * @param {string} key 
+ * @param {string} text 
+ */
+function send_lenny(message, key, text = '') {
+  const lenny = lennys[key]
+
+  if (typeof lennys[key] === 'string') {
+    return message.channel.send(`${lenny} ${text}`)
+  } else {
+    return message.channel.send(text, new Discord.Attachment(lenny.path))
+  }
 }
 
+function set_status() {
+  if (client.status !== 0) return
+
+  const servers = client.guilds.array()
+  const members = servers.map(x => x.memberCount).reduce((a, b) => a + b, 0)
+
+  return client.user.setActivity(`Lenny in ${servers.length} servers with a total of ${members} members. /lenny help`, {
+    type: 'PLAYING'
+  })
+}
+
+setInterval(set_status, 3600000)
+
 client.on('ready', () => {
-    console.log(`I am ready!  ̿̿ ̿̿ ̿̿ ̿'̿'̵͇̿з= ( ▀ ͜͞ʖ▀) =ε/̵͇̿/’̿’̿ ̿ ̿̿ ̿̿ ̿̿`)
+  console.log(`I am ready!  ̿̿ ̿̿ ̿̿ ̿'̿'̵͇̿з= ( ▀ ͜͞ʖ▀) =ε/̵͇̿/’̿’̿ ̿ ̿̿ ̿̿ ̿̿`)
 
-    function updateStats() {
-        const servers = client.guilds.array()
-        const members = servers.map(x => x.memberCount).reduce((a, b) => a + b, 0)
+  set_status()
 
-        client.user.setActivity(`Lenny in ${servers.length} servers with a total of ${members} members. /lenny help`, {
-            type: 'PLAYING'
-        })
+  const help = new Discord.RichEmbed({
+    thumbnail: {
+      url: client.user.avatarURL
+    },
+    color: '000000',
+    title: "Lenny's help",
+    description: `Type \`/lenny\` or mention me (<@${client.user.id}>) to access all lenny's commands.`,
+    fields: [
+      {
+        name: 'help',
+        value: `Open the help information panel (the one you're looking at right now)`
+      },
+      {
+        name: 'random',
+        value: `Send a random lenny`
+      },
+      {
+        name: 'Invitation link',
+        value: `<https://bit.ly/2x47KIB>`
+      },
+      {
+        name: 'Source code',
+        value: `<https://github.com/QuantumSheep/lennybot>`
+      },
+      {
+        name: 'Help Lenny to spread all over the world',
+        value: `<https://discordbots.org/bot/473762588497281024/vote>`
+      },
+      {
+        name: 'Types of lenny',
+        value: lennys_keys.join(', ')
+      }
+    ]
+  })
+
+  client.on('message', msg => {
+    if (msg.author.bot) return
+    if (!msg.content.startsWith(config.prefix) && !msg.content.startsWith(`<@${client.user.id}>`)) return
+
+    const [, ...args] = msg.content.trim().split(/ +/g)
+
+    if (msg.deletable) {
+      msg.delete()
     }
 
-    updateStats()
-    setInterval(updateStats, 3600000)
-
-    const helpEmbed = new Discord.RichEmbed({
-        thumbnail: {
-            url: client.user.avatarURL
-        },
-        color: '000000',
-        title: "Lenny's help",
-        description: `Type \`/lenny\` or mention me (<@${client.user.id}>) to access all lenny's commands.`,
-        fields: [
-            {
-                name: 'help',
-                value: `Open the help information panel (the one you're looking at right now)`
-            },
-            {
-                name: 'random',
-                value: `Send a random lenny`
-            },
-            {
-                name: 'Invitation link',
-                value: `<https://bit.ly/2x47KIB>`
-            },
-            {
-                name: 'Source code',
-                value: `<https://github.com/QuantumSheep/lennybot>`
-            },
-            {
-                name: 'Help Lenny to spread all over the world',
-                value: `<https://discordbots.org/bot/473762588497281024/vote>`
-            },
-            {
-                name: 'Types of lenny',
-                value: Object.keys(lennys).join(', ')
-            }
-        ]
-    })
-
-    const lennysKeys = Object.keys(lennys)
-
-    /**
-     * 
-     * @param {Discord.Message} msg 
-     * @param {string} lenny 
-     * @param {string} message 
-     */
-    async function sendLenny(msg, lenny, message = '') {
-        if (message) {
-            message = ' ' + message
-        } else {
-            message = ''
-        }
-
-        if (typeof lennys[lenny] === 'string') {
-            message = lennys[lenny] + message
-
-            msg.channel.send(message)
-        } else {
-            msg.channel.send(message, new Discord.Attachment(lennys[lenny].path))
-        }
+    if (args.length === 0) {
+      return send_lenny(msg, 'default')
     }
 
-    client.on('message', msg => {
-        if (msg.author.bot) return
+    const option = args.shift().toLowerCase()
+    const text = args.join(' ')
 
-        if (msg.content.indexOf(config.prefix) === 0 || msg.content.indexOf(`<@${client.user.id}>`) === 0) {
-            const [, ...args] = msg.content.trim().split(/ +/g)
+    if (option === 'help') {
+      return msg.channel.send(help)
+    }
 
-            if (msg.deletable) {
-                msg.delete()
-            }
+    if (option === 'random') {
+      return send_lenny(msg, lennys_keys[Math.floor(Math.random() * lennys_keys.length)], text)
+    }
 
-            if (args.length <= 0) {
-                return msg.channel.send(lennys.default)
-            }
+    if (option in lennys) {
+      return send_lenny(msg, option, text)
+    }
 
-            const lenny = args.shift().toLowerCase()
-
-            const message = args.join(' ')
-
-            if (lenny === 'help') {
-                msg.channel.send(helpEmbed)
-            } else if (lenny === 'random') {
-                const randomLenny = lennysKeys[Math.floor(Math.random() * lennysKeys.length)]
-
-                sendLenny(msg, randomLenny, message)
-            } else if (lenny in lennys) {
-                sendLenny(msg, lenny, message)
-            } else {
-                const unknown = msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°) - This message will disappear in 10 seconds')
-
-                unknown.then(message => {
-                    setTimeout(() => {
-                        if (message.deletable) {
-                            message.delete()
-                        }
-                    }, 10000)
-                })
-            }
+    msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°) - This message will disappear in 10 seconds').then(sended => {
+      setTimeout(() => {
+        if (message.deletable) {
+          sended.delete()
         }
+      }, 10000)
     })
+  })
 })
 
 client.login(config.token)
