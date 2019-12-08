@@ -117,7 +117,7 @@ client.on('ready', () => {
 
     msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°) - This message will disappear in 10 seconds').then(sended => {
       setTimeout(() => {
-        if (message.deletable) {
+        if (sended.deletable) {
           sended.delete()
         }
       }, 10000)
