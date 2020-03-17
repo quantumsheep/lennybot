@@ -6,16 +6,10 @@ const lennys = require('./lennys')
 const lennys_keys = Object.keys(lennys)
 
 const client = new Discord.Client()
-client.on('error', err => {
-  if (err !== 'ECONNRESET') {
-    console.log(err)
-  }
-})
+client.on('error', console.error)
 
 const dbl = new DBL(config.discordbotstoken, client)
-dbl.on('error', e => {
-  console.log(`Oops! ${e}`)
-})
+dbl.on('error', console.error)
 
 /**
  * 
@@ -29,19 +23,21 @@ function send_lenny(message, key, text = '') {
   if (typeof lennys[key] === 'string') {
     return message.channel.send(`${lenny} ${text}`)
   } else {
-    return message.channel.send(text, new Discord.Attachment(lenny.path))
+    return message.channel.send(text, new Discord.MessageAttachment(lenny.path))
   }
 }
 
-function set_status() {
-  if (client.status !== 0) return
+async function set_status() {
+  try {
+    if (client.ws.status !== 0) return
 
-  const servers = client.guilds.array()
-  const members = servers.map(x => x.memberCount).reduce((a, b) => a + b, 0)
+    const servers = client.guilds.cache.array()
+    const members = servers.map(x => x.memberCount).reduce((a, b) => a + b, 0)
 
-  return client.user.setActivity(`Lenny in ${servers.length} servers with a total of ${members} members. /lenny help`, {
-    type: 'PLAYING'
-  })
+    return await client.user.setActivity(`Lenny in ${servers.length} servers with a total of ${members} members. /lenny help`, {
+      type: 'PLAYING',
+    })
+  } catch (e) { }
 }
 
 setInterval(set_status, 3600000)
@@ -51,7 +47,7 @@ client.on('ready', () => {
 
   set_status()
 
-  const help = new Discord.RichEmbed({
+  const help = new Discord.MessageEmbed({
     thumbnail: {
       url: client.user.avatarURL
     },
@@ -116,10 +112,12 @@ client.on('ready', () => {
     }
 
     msg.channel.send('This lenny is unknown ( ͡° ʖ̯ ͡°) - This message will disappear in 10 seconds').then(sended => {
-      setTimeout(() => {
-        if (sended.deletable) {
-          sended.delete()
-        }
+      setTimeout(async () => {
+        try {
+          if (client.ws.status !== 0 && sended.deletable) {
+            sended.delete()
+          }
+        } catch (e) { }
       }, 10000)
     })
   })
