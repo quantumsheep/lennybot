@@ -10,7 +10,6 @@ services:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       DBL_TOKEN: ${DBL_TOKEN}
       PREFIX: ${PREFIX}
-      LOG_DIRECTORY: ${LOG_DIRECTORY}
 
 volumes:
   logs:

@@ -20,7 +20,11 @@ dbl.on('error', e => logger.error(`${e.name}: ${e.message}\n${e.stack}`))
 function send_lenny(message, key, text = '') {
   const lenny = lennys[key]
 
-  logger.log(`${message.guild.name}|${message.guild.id}|text=${!!text} - ${key}`)
+  if (message.guild) {
+    logger.log(`(guild|${message.guild.name}|${message.guild.id}|text=${!!text}) - ${key}`)
+  } else if (message.author) {
+    logger.log(`(user|${message.author.username}#${message.author.discriminator}|${message.author.id}|text=${!!text}) - ${key}`)
+  }
 
   if (typeof lennys[key] === 'string') {
     return message.channel.send(`${lenny} ${text}`)
