@@ -1,7 +1,7 @@
 const fs = require('fs')
 const moment = require('moment')
 
-const file = fs.createWriteStream(`${process.env.LOG_DIRECTORY}.log`, { flags: 'a' })
+const file = fs.createWriteStream(`${process.env.LOG_DIRECTORY}/${moment().format('YYYY-MM-DD')}.log`, { flags: 'a' })
 
 /**
  * 
