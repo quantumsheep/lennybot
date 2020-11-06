@@ -1,5 +1,6 @@
 const Discord = require('discord.js')
 const DBL = require('dblapi.js')
+const moment = require('moment')
 
 const lennys = require('./lennys')
 const lennys_keys = Object.keys(lennys)
@@ -18,6 +19,8 @@ dbl.on('error', console.error)
  */
 function send_lenny(message, key, text = '') {
   const lenny = lennys[key]
+
+  console.log(`[${moment().utc().format()}](${message.guild.name}|${message.guild.id}|text=${!!text}): ${key}`)
 
   if (typeof lennys[key] === 'string') {
     return message.channel.send(`${lenny} ${text}`)
