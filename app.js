@@ -1,14 +1,13 @@
 const Discord = require('discord.js')
 const DBL = require('dblapi.js')
 
-const config = require('./config.json')
 const lennys = require('./lennys')
 const lennys_keys = Object.keys(lennys)
 
 const client = new Discord.Client()
 client.on('error', console.error)
 
-const dbl = new DBL(config.discordbotstoken, client)
+const dbl = new DBL(process.env.DBL_TOKEN, client)
 dbl.on('error', console.error)
 
 /**
@@ -84,7 +83,7 @@ client.on('ready', () => {
 
   client.on('message', msg => {
     if (msg.author.bot) return
-    if (!msg.content.startsWith(config.prefix) && !msg.content.startsWith(`<@${client.user.id}>`)) return
+    if (!msg.content.startsWith(process.env.PREFIX) && !msg.content.startsWith(`<@${client.user.id}>`)) return
 
     const [, ...args] = msg.content.trim().split(/ +/g)
 
@@ -123,4 +122,4 @@ client.on('ready', () => {
   })
 })
 
-client.login(config.token)
+client.login(process.env.DISCORD_TOKEN)
