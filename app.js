@@ -1,15 +1,15 @@
 const Discord = require('discord.js')
 const DBL = require('dblapi.js')
-const moment = require('moment')
+const logger = require('./logger')
 
 const lennys = require('./lennys')
 const lennys_keys = Object.keys(lennys)
 
 const client = new Discord.Client()
-client.on('error', console.error)
+client.on('error', e => logger.error(`${e.name}: ${e.message}\n${e.stack}`))
 
 const dbl = new DBL(process.env.DBL_TOKEN, client)
-dbl.on('error', console.error)
+dbl.on('error', logger.error(`${e.name}: ${e.message}\n${e.stack}`))
 
 /**
  * 
@@ -20,7 +20,7 @@ dbl.on('error', console.error)
 function send_lenny(message, key, text = '') {
   const lenny = lennys[key]
 
-  console.log(`[${moment().utc().format()}](${message.guild.name}|${message.guild.id}|text=${!!text}): ${key}`)
+  logger.log(`${message.guild.name}|${message.guild.id}|text=${!!text} - ${key}`)
 
   if (typeof lennys[key] === 'string') {
     return message.channel.send(`${lenny} ${text}`)

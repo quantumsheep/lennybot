@@ -8,6 +8,7 @@ RUN npm ci
 
 COPY app.js ./
 COPY lennys.js ./
+COPY logger.js ./
 
 COPY adnlenny.gif ./
 

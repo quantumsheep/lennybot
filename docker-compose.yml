@@ -4,7 +4,13 @@ services:
   bot:
     build: .
     env_file: .env
+    volumes:
+      - logs:/var/log/lennybot
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       DBL_TOKEN: ${DBL_TOKEN}
       PREFIX: ${PREFIX}
+      LOG_DIRECTORY: ${LOG_DIRECTORY}
+
+volumes:
+  logs:
