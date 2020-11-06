@@ -9,7 +9,7 @@ const client = new Discord.Client()
 client.on('error', e => logger.error(`${e.name}: ${e.message}\n${e.stack}`))
 
 const dbl = new DBL(process.env.DBL_TOKEN, client)
-dbl.on('error', logger.error(`${e.name}: ${e.message}\n${e.stack}`))
+dbl.on('error', e => logger.error(`${e.name}: ${e.message}\n${e.stack}`))
 
 /**
  * 
