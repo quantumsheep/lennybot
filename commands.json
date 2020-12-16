@@ -1,0 +1,120 @@
+{
+    "name": "lenny",
+    "description": "Send a lenny",
+    "options": [
+        {
+            "name": "type",
+            "description": "The type of lenny",
+            "type": 3,
+            "required": false,
+            "choices": [
+                {
+                    "name": "default",
+                    "value": "default"
+                },
+                {
+                    "name": "tripping",
+                    "value": "tripping"
+                },
+                {
+                    "name": "sensual",
+                    "value": "sensual"
+                },
+                {
+                    "name": "communist",
+                    "value": "communist"
+                },
+                {
+                    "name": "nothappy",
+                    "value": "nothappy"
+                },
+                {
+                    "name": "magic",
+                    "value": "magic"
+                },
+                {
+                    "name": "wick",
+                    "value": "wick"
+                },
+                {
+                    "name": "straya",
+                    "value": "straya"
+                },
+                {
+                    "name": "peek",
+                    "value": "peek"
+                },
+                {
+                    "name": "blush",
+                    "value": "blush"
+                },
+                {
+                    "name": "tableflip",
+                    "value": "tableflip"
+                },
+                {
+                    "name": "unflip",
+                    "value": "unflip"
+                },
+                {
+                    "name": "bill",
+                    "value": "bill"
+                },
+                {
+                    "name": "love",
+                    "value": "love"
+                },
+                {
+                    "name": "loveya",
+                    "value": "loveya"
+                },
+                {
+                    "name": "flex",
+                    "value": "flex"
+                },
+                {
+                    "name": "reversed",
+                    "value": "reversed"
+                },
+                {
+                    "name": "shrug",
+                    "value": "shrug"
+                },
+                {
+                    "name": "sword",
+                    "value": "sword"
+                },
+                {
+                    "name": "sword2",
+                    "value": "sword2"
+                },
+                {
+                    "name": "fisticuffs",
+                    "value": "fisticuffs"
+                },
+                {
+                    "name": "thumbsup",
+                    "value": "thumbsup"
+                },
+                {
+                    "name": "bird",
+                    "value": "bird"
+                },
+                {
+                    "name": "dna",
+                    "value": "dna"
+                },
+                {
+                    "name": "snake",
+                    "value": "snake"
+                }
+            ]
+        },
+        {
+            "name": "text",
+            "description": "Text that lenny says",
+            "type": 3,
+            "required": false
+        }
+    ]
+}
