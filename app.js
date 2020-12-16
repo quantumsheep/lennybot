@@ -108,7 +108,12 @@ client.on('ready', () => {
       if (channel.type === 'text' || channel.type === 'dm' || channel.type === 'news') {
         /** @type {Discord.TextChannel | Discord.DMChannel | Discord.NewsChannel} */
         const textChannel = channel;
-        const lenny = lennys[type];
+
+        if (type === 'help') {
+          return textChannel.send(help)
+        }
+
+        const lenny = (option === 'random') ? lennys[lennys_keys[Math.floor(Math.random() * lennys_keys.length)]] : lennys[type];
 
         if (typeof lenny === 'string') {
           send_lenny_channel(textChannel, `${lenny} ${text}`);

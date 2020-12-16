@@ -9,6 +9,14 @@
             "required": false,
             "choices": [
                 {
+                    "name": "help",
+                    "value": "help"
+                },
+                {
+                    "name": "random",
+                    "value": "random"
+                },
+                {
                     "name": "default",
                     "value": "default"
                 },
