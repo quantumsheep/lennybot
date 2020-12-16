@@ -79,7 +79,7 @@ client.on('ready', () => {
       },
       {
         name: 'Invitation link',
-        value: `<https://bit.ly/2KxnOwh>`
+        value: `<https://bit.ly/3r2uvXV>`
       },
       {
         name: 'Source code',
