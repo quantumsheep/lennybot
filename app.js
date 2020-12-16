@@ -99,7 +99,9 @@ client.on('ready', () => {
   client.on('raw', async (packet) => {
     if (packet.t === 'INTERACTION_CREATE') {
       const options = packet.d.data?.options;
+
       const type = options ? options.find(option => option.name === 'type')?.value : 'default';
+      const text = options ? options.find(option => option.name === 'text')?.value : '';
 
       const channel = await client.channels.fetch(packet.d.channel_id, true);
 
@@ -109,9 +111,9 @@ client.on('ready', () => {
         const lenny = lennys[type ?? 'default'];
 
         if (typeof lenny === 'string') {
-          send_lenny_channel(textChannel, `${lenny}`);
+          send_lenny_channel(textChannel, `${lenny} ${text ?? ''}`);
         } else {
-          send_lenny_channel(textChannel, '', new Discord.MessageAttachment(lenny.path));
+          send_lenny_channel(textChannel, text ?? '', new Discord.MessageAttachment(lenny.path));
         }
       }
     }
