@@ -12,7 +12,15 @@ const dbl = new DBL(process.env.DBL_TOKEN, client)
 dbl.on('error', e => logger.error(`${e.name}: ${e.message}\n${e.stack}`))
 
 /**
- * 
+ * @param {Discord.TextChannel | Discord.DMChannel | Discord.NewsChannel} channel 
+ * @param {string} text 
+ * @param {Discord.MessageAttachment} attachment 
+ */
+function send_lenny_channel(channel, text, attachment = null) {
+  return channel.send(text, attachment);
+}
+
+/**
  * @param {Discord.Message} message 
  * @param {string} key 
  * @param {string} text 
@@ -27,9 +35,9 @@ function send_lenny(message, key, text = '') {
   }
 
   if (typeof lennys[key] === 'string') {
-    return message.channel.send(`${lenny} ${text}`)
+    send_lenny_channel(message.channel, `${lenny} ${text}`);
   } else {
-    return message.channel.send(text, new Discord.MessageAttachment(lenny.path))
+    send_lenny_channel(message.channel, text, new Discord.MessageAttachment(lenny.path));
   }
 }
 
@@ -86,7 +94,28 @@ client.on('ready', () => {
         value: lennys_keys.join(', ')
       }
     ]
-  })
+  });
+
+  client.on('raw', async (packet) => {
+    if (packet.t === 'INTERACTION_CREATE') {
+      const options = packet.d.data?.options;
+      const type = options ? options.find(option => option.name === 'type')?.value : 'default';
+
+      const channel = await client.channels.fetch(packet.d.channel_id, true);
+
+      if (channel.type === 'text' || channel.type === 'dm' || channel.type === 'news') {
+        /** @type {Discord.TextChannel | Discord.DMChannel | Discord.NewsChannel} */
+        const textChannel = channel;
+        const lenny = lennys[type ?? 'default'];
+
+        if (typeof lenny === 'string') {
+          send_lenny_channel(textChannel, `${lenny}`);
+        } else {
+          send_lenny_channel(textChannel, '', new Discord.MessageAttachment(lenny.path));
+        }
+      }
+    }
+  });
 
   client.on('message', msg => {
     if (msg.author.bot) return
