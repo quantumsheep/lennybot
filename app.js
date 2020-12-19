@@ -113,7 +113,7 @@ client.on('ready', () => {
           return textChannel.send(help)
         }
 
-        const lenny = (option === 'random') ? lennys[lennys_keys[Math.floor(Math.random() * lennys_keys.length)]] : lennys[type];
+        const lenny = (type === 'random') ? lennys[lennys_keys[Math.floor(Math.random() * lennys_keys.length)]] : lennys[type];
 
         if (typeof lenny === 'string') {
           send_lenny_channel(textChannel, `${lenny} ${text}`);
