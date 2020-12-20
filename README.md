@@ -2,7 +2,7 @@
 Leeny is a Discord bot that give you its face, accessible from the `/lenny` command or by mentioning it with `@Lenny` it will show its beautiful face "`( ͡° ͜ʖ ͡°)`".
 
 # How to install
-Visit [this link](https://discordapp.com/oauth2/authorize?&client_id=473762588497281024&scope=bot&permissions=1275591744) to invite Lenny to your server.
+Visit [this link](https://discord.com/oauth2/authorize?client_id=473762588497281024&scope=applications.commands+bot&permissions=1275591744) to invite Lenny to your server.
 
 # Commands
 - `/lenny help` --> View all the different commands and lennyfaces you can use
