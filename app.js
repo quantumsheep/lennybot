@@ -28,15 +28,20 @@ function send_lenny_channel(channel, text, attachment = null) {
  * @param {Discord.MessageEmbed} attachment 
  */
 function send_lenny_interaction(interaction, text, attachment = null) {
+  const data = {
+    content: text,
+  };
+
+  if (attachment) {
+    data.embeds = [attachment];
+  }
+
   return axios({
     method: 'POST',
     url: `https://discord.com/api/v8/interactions/${interaction.id}/${interaction.token}/callback`,
     data: {
       type: 4,
-      data: {
-        content: text,
-        embeds: [attachment],
-      },
+      data,
     },
   });
 }
