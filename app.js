@@ -1,5 +1,6 @@
 const Discord = require('discord.js')
 const DBL = require('dblapi.js')
+const axios = require('axios');
 const logger = require('./logger')
 
 const lennys = require('./lennys')
@@ -18,6 +19,26 @@ dbl.on('error', e => logger.error(`${e.name}: ${e.message}\n${e.stack}`))
  */
 function send_lenny_channel(channel, text, attachment = null) {
   return channel.send(text, attachment);
+}
+
+/**
+ * 
+ * @param {*} interaction 
+ * @param {string} text 
+ * @param {Discord.MessageEmbed} attachment 
+ */
+function send_lenny_interaction(interaction, text, attachment = null) {
+  return axios({
+    method: 'POST',
+    url: `https://discord.com/api/v8/interactions/${interaction.id}/${interaction.token}/callback`,
+    data: {
+      type: 4,
+      data: {
+        content: text,
+        embeds: [attachment],
+      },
+    },
+  });
 }
 
 /**
@@ -116,9 +137,13 @@ client.on('ready', () => {
         const lenny = (type === 'random') ? lennys[lennys_keys[Math.floor(Math.random() * lennys_keys.length)]] : lennys[type];
 
         if (typeof lenny === 'string') {
-          send_lenny_channel(textChannel, `${lenny} ${text}`);
+          send_lenny_interaction(packet.d, `${lenny} ${text}`);
         } else {
-          send_lenny_channel(textChannel, text, new Discord.MessageAttachment(lenny.path));
+          // const attachment = new Discord.MessageAttachment(lenny.path);
+          // send_lenny_interaction(packet.d, text, new Discord.MessageEmbed({
+          //   type: 'image',
+          //   image: attachment.toJSON(),
+          // }));
         }
       }
     }
