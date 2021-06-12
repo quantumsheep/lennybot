@@ -132,11 +132,8 @@ client.on('ready', () => {
       const channel = await client.channels.fetch(packet.d.channel_id, true);
 
       if (channel.type === 'text' || channel.type === 'dm' || channel.type === 'news') {
-        /** @type {Discord.TextChannel | Discord.DMChannel | Discord.NewsChannel} */
-        const textChannel = channel;
-
         if (type === 'help') {
-          return textChannel.send(help)
+          return send_lenny_interaction(packet.d, undefined, help);
         }
 
         const lenny = (type === 'random') ? lennys[lennys_keys[Math.floor(Math.random() * lennys_keys.length)]] : lennys[type];
